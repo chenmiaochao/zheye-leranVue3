@@ -1,0 +1,30 @@
+<template>
+  <form class="validation-input-container">
+    <slot name="default"></slot>
+    <div class="submit-area" @click.prevent="submitFrom">
+          <slot name="submit">
+            <button type="submit" class="btn btn-primary">提交</button>
+          </slot>
+    </div>
+  </form>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
+  emits: ['form-submit'],
+  setup (props, context) {
+    const submitFrom = () => {
+      context.emit('form-submit', true)
+    }
+    return {
+      submitFrom
+    }
+  },
+  mounted() {
+    this.$on('item-created', () => {
+      
+    })
+  }
+})
+</script>
