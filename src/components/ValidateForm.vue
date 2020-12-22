@@ -12,6 +12,7 @@
 <script lang="ts">
 import { defineComponent, onUnmounted } from 'vue'
 import mitt from 'mitt'
+// 类型,一个func,返回boolean,也可以是对象{boolean,string}
 type ValidateFunc = () => boolean
 // 实例化 mitt
 export const emitter = mitt()
@@ -20,7 +21,7 @@ export default defineComponent({
   setup (props, context) {
     let funcArr: ValidateFunc[] = []
     const submitForm = () => {
-      // 循环执行数组 得到最后的验证结果
+      // 循环执行validate数组 得到最后的验证结果
       const result = funcArr.map(func => func()).every(result => result)
       context.emit('form-submit', result)
     }
