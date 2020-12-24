@@ -1,6 +1,7 @@
 <template>
   <div class="home-page">
     <section class="py-5 text-center container">
+      <h2>{{biggerColumnLen}}</h2>
       <div class="row py-lg-5">
         <div class="col-lg-6 com-md-8 mx-auto">
           <img src="../assets/4.png" alt="callout" class="w-50"/>
@@ -17,42 +18,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
 import ColumnList, { ColumnProps } from '../components/ColumnList.vue'
-const testData: ColumnProps[] = [
-  {
-    id: 1,
-    title: 'test1的专栏',
-    description: '这是的test1专栏，有一段非常有意思的简介，可以更新一下欧',
-    avatar: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
-  },
-  {
-    id: 2,
-    title: 'test2的专栏',
-    description: '这是的test2专栏，有一段非常有意思的简介，可以更新一下欧'
-    // avatar: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
-  },
-  {
-    id: 3,
-    title: 'test3的专栏',
-    description: '这是的test1专栏，有一段非常有意思的简介，可以更新一下欧',
-    avatar: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
-  },
-  {
-    id: 4,
-    title: 'test4的专栏',
-    description: '这是的test2专栏，有一段非常有意思的简介，可以更新一下欧',
-    avatar: 'http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100'
-  }
-]
+
 export default defineComponent({
   name: 'Home',
   components: {
     ColumnList
   },
   setup () {
+    const store = useStore<GlobalDataProps>()
+    // 因为vue3中store是响应式的,所以读取state(状态),最好的方法是computed
+    const list = computed(() => store.state.columns)
+    const biggerColumnLen = computed(() => store.getters.biggerColumnLen)
+    console.log(biggerColumnLen)
     return {
-      list: testData
+      list,
+      biggerColumnLen
     }
   }
 })

@@ -29,40 +29,41 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import ValidateInput, { RulesProp } from '../components/ValidateInput.vue'
 import ValidateForm from '../components/ValidateForm.vue'
 export default defineComponent({
-  name: 'App',
+  name: 'Login',
   components: {
     ValidateInput,
     ValidateForm
   },
   setup () {
-    const inputRef = ref<any>()
-    const emailVal = ref('123@test.com')
+    const store = useStore()
+    const router = useRouter()
+    const emailVal = ref('')
+
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
-    const passwordVal = ref('123')
+    const passwordVal = ref('')
     const passwordRules: RulesProp = [
       { type: 'required', message: '请输入密码' }
     ]
-    // const emailRef = reactive({
-    //   val: '',
-    //   error: false,
-    //   message: ''
-    // })
     const onFormSubmit = (result: boolean) => {
-      console.log('result', result)
+      if (result) {
+        router.push('/')
+        store.commit('login')
+      }
     }
     return {
       emailRules,
       passwordRules,
       emailVal,
       passwordVal,
-      onFormSubmit,
-      inputRef
+      onFormSubmit
     }
   }
 })
