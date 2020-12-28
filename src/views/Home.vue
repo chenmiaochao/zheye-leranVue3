@@ -18,10 +18,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { GlobalDataProps } from '../store'
-import ColumnList, { ColumnProps } from '../components/ColumnList.vue'
+import { GlobalDataProps, ColumnProps } from '../store'
+import ColumnList from '../components/ColumnList.vue'
 
 export default defineComponent({
   name: 'Home',
@@ -30,10 +30,12 @@ export default defineComponent({
   },
   setup () {
     const store = useStore<GlobalDataProps>()
+    onMounted(() => {
+      store.dispatch('fetchColumns')
+    })
     // 因为vue3中store是响应式的,所以读取state(状态),最好的方法是computed
     const list = computed(() => store.state.columns)
     const biggerColumnLen = computed(() => store.getters.biggerColumnLen)
-    console.log(biggerColumnLen)
     return {
       list,
       biggerColumnLen

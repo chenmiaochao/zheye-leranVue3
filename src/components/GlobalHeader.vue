@@ -7,7 +7,7 @@
     </ul>
     <ul v-else class="list-inline mb-0">
       <li class="list-inline-item">
-        <dropdown :title="`こんにちわ ${user.name}`">
+        <dropdown :title="`こんにちわ ${user.nickName}`">
         <dropdown-item><a href="#" class="dropdown-item">新規記事</a></dropdown-item>
         <dropdown-item disabled><a href="#" class="dropdown-item">編集</a></dropdown-item>
         <dropdown-item><a href="#" class="dropdown-item">ログアウト</a></dropdown-item>
@@ -22,11 +22,7 @@
 import { defineComponent, PropType } from 'vue'
 import Dropdown from './Dropdown.vue'
 import DropdownItem from './DropdownItem.vue'
-export interface UserProps {
-  isLogin: boolean;
-  name?: string;
-  id?: number;
-}
+import { UserProps } from '../store'
 export default defineComponent({
   name: 'GlobalHeader',
   components: {

@@ -27,8 +27,11 @@ export default defineComponent({
   setup () {
     const store = useStore<GlobalDataProps>()
     const route = useRoute()
-    // string => number
-    const currentId = +route.params.id
+    const currentId = route.params.id
+    onMounted(() => {
+      store.dispatch('fetchColumn', currentId)
+      store.dispatch('fetchPosts', currentId)
+    })
     // 从数组里面找一项 匹配专栏id的testdata
     const column = computed(() => store.getters.getColumnById(currentId))
     // 数组里面找许多项 匹配post里面的column id = currentid
