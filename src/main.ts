@@ -7,6 +7,7 @@ axios.defaults.baseURL = 'http://apis.imooc.com/api/'
 
 axios.interceptors.request.use(config => {
   store.commit('setLoading', true)
+  store.commit('setError', { status: false, message: '' })
   // 替换 baseURL
   // get 请求，添加到 url 中
   config.params = { ...config.params, icode: '05D9B1DA114D8400' }
@@ -23,6 +24,11 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(config => {
   store.commit('setLoading', false)
   return config
+}, e => {
+  const { error } = e.response.data
+  store.commit('setError', { status: true, message: error })
+  store.commit('setLoading', false)
+  return Promise.reject(error)
 })
 const app = createApp(App)
 app.use(router)
