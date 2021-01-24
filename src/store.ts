@@ -1,5 +1,5 @@
 import { Commit, createStore } from 'vuex'
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 export interface ResponseType<P = {}> {
   code: number;
   msg: string;
@@ -55,6 +55,11 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
   commit(mutationName, data)
   return data
 }
+const asyncAndCommit = async (url: string, mutationName: string, commit: Commit, config: AxiosRequestConfig = { method: 'get' }) => {
+  const { data } = await axios(url, config)
+  commit(mutationName, data)
+  return data
+}
 const store = createStore<GlobalDataProps>({
   state: {
     error: { status: false },
@@ -70,6 +75,18 @@ const store = createStore<GlobalDataProps>({
     // },
     createPost (state, newPost) {
       state.posts.push(newPost)
+    },
+    updatePost (state, { data }) {
+      state.posts = state.posts.map(post => {
+        if (post._id === data._id) {
+          return data
+        } else {
+          return post
+        }
+      })
+    },
+    deletePost (state, { data }) {
+      state.posts = state.posts.filter(post => post._id !== data._id)
     },
     fetchColumns (state, rawdata) {
       state.columns = rawdata.data.list
@@ -124,6 +141,17 @@ const store = createStore<GlobalDataProps>({
     },
     createPost ({ commit }, payload) {
       return postAndCommit('/posts', 'createPost', commit, payload)
+    },
+    updatePost ({ commit }, { id, payload }) {
+      return asyncAndCommit(`/post/${id}`, 'updatePost', commit, {
+        method: 'patch',
+        data: payload
+      })
+    },
+    deletePost ({ commit }, id) {
+      return asyncAndCommit(`/post/${id}`, 'deletePost', commit, {
+        method: 'delete'
+      })
     }
   },
   getters: {
